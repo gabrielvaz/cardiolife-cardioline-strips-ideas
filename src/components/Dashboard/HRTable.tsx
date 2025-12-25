@@ -7,6 +7,7 @@ const HRTable = () => {
   const { activeVariant } = useVariant();
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [selectedGridIndex, setSelectedGridIndex] = useState<number | null>(null);
+  const [isHovered, setIsHovered] = useState(false); // Global Hover State
   
   // Generate 24 hours of data starting from 2025-10-29 08:00
   const generateTableData = () => {
@@ -14,7 +15,6 @@ const HRTable = () => {
     const startDate = new Date(2025, 9, 29, 8, 0, 0); // Oct 29, 2025 08:00
     
     for (let i = 0; i < 24; i++) {
-        // Handle midnight transition logic for V2/V6 specifically if needed, but Date obj does it.
       const currentHour = new Date(startDate.getTime() + i * 60 * 60 * 1000);
       
       const year = currentHour.getFullYear();
@@ -35,7 +35,7 @@ const HRTable = () => {
         min: Math.floor(40 + Math.random() * 10),
         max: Math.floor(90 + Math.random() * 60),
         pauses: Math.floor(Math.random() * 5),
-        perHour: (2 + Math.random()).toFixed(2), // Removed 'k' to sort easier or format later
+        perHour: (2 + Math.random()).toFixed(2), 
         maxPause: (Math.random() * 3.5).toFixed(1),
         events: i % 3 === 0 ? ['S', 'V'] : i % 5 === 0 ? ['P'] : [],
         critical: i === 2 || i === 15,
@@ -56,7 +56,6 @@ const HRTable = () => {
 
   const handleGridClick = (idx: number) => {
       setSelectedGridIndex(idx);
-      // In a real app, this would dispatch to context or useECGViewer to scroll strip
   }
 
   const getPauseColor = (pauses: number, maxPause: string) => {
@@ -66,7 +65,7 @@ const HRTable = () => {
     return 'inherit';
   };
 
-  // --- V1: Standard Clinical (Adjusted Scroll Height) ---
+  // --- V1: Standard Clinical ---
   const renderV1Table = () => (
     <div style={{ height: 'calc(100vh - 140px)', overflowY: 'auto' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', tableLayout: 'fixed' }}>
@@ -86,7 +85,6 @@ const HRTable = () => {
                 <div style={{ fontSize: '11px', fontWeight: 600, color: '#111827', lineHeight: '1.4' }}>{row.fullTime}</div>
               </td>
               <td style={{ padding: '10px 16px', fontSize: '11px', fontWeight: 700, color: '#111827' }}>{row.mean} <span style={{fontSize: '10px', fontWeight: 400, color: '#9ca3af'}}>bpm</span></td>
-              {/* V7 Tooltip Logic added to Range Cell */}
               <td 
                 style={{ padding: '10px 16px', whiteSpace: 'nowrap' }} 
                 title={activeVariant === 7 ? `Mean Heart Rate: ${row.mean} bpm` : ''} 
@@ -116,7 +114,7 @@ const HRTable = () => {
     </div>
   );
 
-  // --- V2: Overview Timeline (Added Date Divider, Per Hour, Max Pause) ---
+  // --- V2: Overvie Timeline (Aligned with Header) ---
   const renderV2Table = () => {
     let lastDate = '';
     return (
@@ -124,7 +122,8 @@ const HRTable = () => {
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', tableLayout: 'fixed' }}>
           <thead style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: '#f9fafb' }}>
             <tr style={{ textAlign: 'left' }}>
-              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Time</th>
+              {/* Padding-left adjusted to 16px to match Header title padding (12px 16px) */}
+              <th style={{ padding: '6px 8px 6px 16px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Time</th>
               <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Beats</th>
               <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Mean</th>
               <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Min</th>
@@ -141,13 +140,15 @@ const HRTable = () => {
                 <React.Fragment key={idx}>
                   {showDivider && (
                      <tr style={{ backgroundColor: '#f3f4f6' }}>
-                      <td colSpan={7} style={{ padding: '4px 8px', fontWeight: 700, fontSize: '11px', color: '#4b5563', borderBottom: '1px solid #e5e7eb', letterSpacing: '0.5px' }}>
+                        {/* Padding-left adjusted to 16px */}
+                      <td colSpan={7} style={{ padding: '4px 8px 4px 16px', fontWeight: 700, fontSize: '11px', color: '#4b5563', borderBottom: '1px solid #e5e7eb', letterSpacing: '0.5px' }}>
                         {row.fullDate}
                       </td>
                     </tr>
                   )}
                   <tr style={{ borderBottom: '1px solid #f3f4f6', backgroundColor: idx % 2 === 0 ? 'white' : '#f9fbff' }}>
-                    <td style={{ padding: '4px 8px' }}>{row.fullTime}</td>
+                    {/* Padding-left adjusted to 16px */}
+                    <td style={{ padding: '4px 8px 4px 16px' }}>{row.fullTime}</td>
                     <td style={{ padding: '4px 8px' }}>{row.beats}</td>
                     <td style={{ padding: '4px 8px' }}>{row.mean}</td>
                     <td style={{ padding: '4px 8px', color: '#2563eb', fontWeight: 600 }}>{row.min}</td>
@@ -163,7 +164,7 @@ const HRTable = () => {
     </div>
   )};
 
-  // --- V3: Progressive (Updated Expansion) ---
+  // --- V3: Progressive ---
   const renderV3Table = () => (
     <div style={{ height: '100%', overflowY: 'auto' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', tableLayout: 'fixed' }}>
@@ -202,7 +203,6 @@ const HRTable = () => {
                   <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #f3f4f6' }}>
                     <td colSpan={3} style={{ padding: '0 0 0 0' }}>
                         <div style={{ padding: '16px 24px', backgroundColor: '#f8fafc', borderTop: '1px dashed #e2e8f0', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-                           {/* Updated Nested Info */}
                             <div>
                                 <div style={{ fontSize: '10px', color: '#64748b', textTransform: 'uppercase' }}>Beats</div>
                                 <div style={{ fontSize: '13px', fontWeight: 600 }}>{row.beats}</div>
@@ -231,7 +231,7 @@ const HRTable = () => {
     </div>
   );
 
-  // --- V4 Expert (Unchanged mostly, ensuring beats there) ---
+  // --- V4 Expert ---
   const renderV4Table = () => (
      <div style={{ height: '100%', overflowY: 'auto' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', tableLayout: 'fixed' }}>
@@ -274,7 +274,7 @@ const HRTable = () => {
     </div>
   );
 
-  // --- V5: Triage (Added Per Hour, Max Pause) ---
+  // --- V5: Triage (Widths adjusted to prevent wrap) ---
   const renderV5Table = () => {
     let lastDate = '';
     return (
@@ -282,13 +282,14 @@ const HRTable = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', tableLayout: 'fixed' }}>
           <thead style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: '#f9fafb' }}>
              <tr style={{ textAlign: 'left' }}>
-              <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '15%' }}>Time</th>
-              <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '15%' }}>Beats</th>
+              <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '12%' }}>Time</th>
+              <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '12%' }}>Beats</th>
               <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '10%' }}>Min</th>
               <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '10%' }}>Mean</th>
               <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '10%' }}>Max</th>
-              <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '15%' }}>Per Hr</th>
-              <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '15%' }}>Max P</th>
+              {/* Increased width for Per Hr and Max P to 18% to prevent wrapping */}
+              <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '18%', whiteSpace: 'nowrap' }}>Per Hr</th>
+              <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '18%', whiteSpace: 'nowrap' }}>Max P</th>
               <th style={{ padding: '6px 12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', width: '10%' }}>Pauses</th>
             </tr>
           </thead>
@@ -324,13 +325,14 @@ const HRTable = () => {
     );
   };
 
-  // --- V6: Stack Mode (Updated Date Logic, Added Rows) ---
+  // --- V6: Stack Mode (Distinct Date Row) ---
   const renderV6VerticalTable = () => {
     return (
       <div style={{ height: '100%', width: '100%', overflowX: 'auto', display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', minWidth: 'fit-content' }}>
             {/* Headers / Row labels */}
             <div style={{ width: '100px', flexShrink: 0, borderRight: '1px solid #e5e7eb', backgroundColor: '#f9fafb', position: 'sticky', left: 0, zIndex: 20 }}>
+                 <div style={{ height: '30px', borderBottom: '1px solid #e5e7eb', padding: '6px 12px', fontWeight: 700, fontSize: '11px', color: '#6b7280', backgroundColor: '#f3f4f6' }}>Date</div>
                  <div style={{ height: '40px', borderBottom: '1px solid #e5e7eb', padding: '12px', fontWeight: 700, fontSize: '12px' }}>Time</div>
                  <div style={{ height: '40px', padding: '12px', fontWeight: 600, fontSize: '12px', color: '#6b7280' }}>Heart Rate</div>
                  <div style={{ height: '40px', padding: '12px', fontWeight: 600, fontSize: '12px', color: '#6b7280' }}>Beats</div>
@@ -347,30 +349,23 @@ const HRTable = () => {
                     const isNewDay = col.fullTime === '00:00';
                     const isStart = idx === 0;
                     return (
-                        <React.Fragment key={idx}>
-                             {isNewDay && !isStart && (
-                                <div style={{ width: '2px', backgroundColor: '#f8973d' }} />
-                                /* Divider for date change */
-                            )}
-                            <div style={{ width: '60px', flexShrink: 0, borderRight: '1px solid #f3f4f6', textAlign: 'center' }}>
-                                <div style={{ height: '40px', borderBottom: '1px solid #e5e7eb', padding: '8px 4px', fontSize: '11px', fontWeight: 700, backgroundColor: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                    <span>{col.fullTime}</span>
-                                    {/* Date Logic: Only at 08:00 (Start) and 00:00 (Day Change) */}
-                                    {(isStart || isNewDay) && (
-                                        <span style={{fontSize: '9px', color: '#f97316', fontWeight: 700, marginTop: '2px'}}>
-                                            {col.fullDate.slice(5)}
-                                        </span>
-                                    )}
-                                </div>
-                                <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px' }}>{col.mean}</div>
-                                <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px' }}>{col.beats}</div>
-                                <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px', color: '#2563eb' }}>{col.min}</div>
-                                <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px', color: '#ef4444' }}>{col.max}</div>
-                                <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px', backgroundColor: col.pauses > 0 ? '#fef2f2' : 'transparent' }}>{col.pauses || '-'}</div>
-                                <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px' }}>{col.perHour}k</div>
-                                <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px' }}>{col.maxPause}s</div>
+                        <div key={idx} style={{ width: '60px', flexShrink: 0, borderRight: '1px solid #f3f4f6', textAlign: 'center' }}>
+                            {/* Distinct Date Line Row */}
+                            <div style={{ height: '30px', borderBottom: '1px solid #e5e7eb', padding: '6px 4px', fontSize: '10px', fontWeight: 700, backgroundColor: '#f3f4f6', color: '#4b5563', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                                {(isStart || isNewDay) ? col.fullDate.slice(5) : ''}
                             </div>
-                        </React.Fragment>
+                            
+                            <div style={{ height: '40px', borderBottom: '1px solid #e5e7eb', padding: '8px 4px', fontSize: '11px', fontWeight: 700, backgroundColor: '#fff', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                <span>{col.fullTime}</span>
+                            </div>
+                            <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px' }}>{col.mean}</div>
+                            <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px' }}>{col.beats}</div>
+                            <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px', color: '#2563eb' }}>{col.min}</div>
+                            <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px', color: '#ef4444' }}>{col.max}</div>
+                            <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px', backgroundColor: col.pauses > 0 ? '#fef2f2' : 'transparent' }}>{col.pauses || '-'}</div>
+                            <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px' }}>{col.perHour}k</div>
+                            <div style={{ height: '40px', padding: '12px 4px', fontSize: '12px' }}>{col.maxPause}s</div>
+                        </div>
                     )
                 })}
             </div>
@@ -379,7 +374,7 @@ const HRTable = () => {
     );
   };
 
-  // V11: Accordion (Unchanged logic for now)
+  // V11: Accordion
   const renderV11AccordionTable = () => (
      <div style={{ height: '100%', overflowY: 'auto' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', tableLayout: 'fixed' }}>
@@ -425,9 +420,17 @@ const HRTable = () => {
     </div>
   );
 
-  // --- V12: Grid View (Smaller Cards, Added Info, Active State) ---
+  // --- V12: Grid View (Tight Spacing, Full Content) ---
   const renderV12Grid = () => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '8px', padding: '12px', overflowY: 'auto', height: '100%' }}>
+    <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', 
+        gap: '12px', 
+        padding: '12px', 
+        overflowY: 'auto', 
+        height: '100%',
+        alignContent: 'start' // Ensure rows pack to top to avoid large gaps
+    }}>
         {tableData.map((row, idx) => {
             const isSelected = selectedGridIndex === idx;
             return (
@@ -439,34 +442,45 @@ const HRTable = () => {
                     backgroundColor: row.critical ? '#fef2f2' : 'white',
                     boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
                     cursor: 'pointer',
-                    height: '110px' // Smaller height
+                    height: '140px', // Adjusted height for more content
+                    fontSize: '11px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
             }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <div style={{ fontSize: '13px', fontWeight: 700 }}>{row.fullTime}</div>
                     {isSelected && <div style={{ fontSize: '10px', color: '#2563eb', fontWeight: 700 }}>ACTIVE</div>}
                 </div>
                 
-                <div style={{ fontSize: '18px', fontWeight: 700, color: '#374151' }}>{row.mean} <span style={{ fontSize: '11px', color: '#9ca3af' }}>bpm</span></div>
-                
-                {/* Added Beats */}
-                 <div style={{ fontSize: '11px', color: '#4b5563', marginTop: '4px' }}><strong>{row.beats}</strong> beats</div>
+                {/* HR Min - Mean - Max */}
+                <div style={{ margin: '4px 0'}}>
+                    <div style={{ fontSize: '16px', fontWeight: 700, color: '#374151' }}>{row.mean} <span style={{ fontSize: '10px', color: '#9ca3af', fontWeight: 400 }}>bpm</span></div>
+                    <div style={{ display: 'flex', gap: '4px', fontSize: '10px', color: '#6b7280' }}>
+                        <span>Min: {row.min}</span>
+                        <span>Max: {row.max}</span>
+                    </div>
+                </div>
 
-                {row.pauses > 0 && <div style={{ fontSize: '11px', color: '#ef4444', fontWeight: 700, marginTop: '4px' }}>{row.pauses} Pauses</div>}
+                {/* Additional Stats: Pauses, Per Hour, Beats, Max Pause */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px', fontSize: '10px', color: '#4b5563'}}>
+                    <div>Beats: <b>{row.beats}</b></div>
+                    <div>Per Hr: <b>{row.perHour}k</b></div>
+                    <div style={{color: row.pauses > 0 ? '#ef4444' : 'inherit'}}>Pauses: <b>{row.pauses}</b></div>
+                    <div>Max P: <b>{row.maxPause}s</b></div>
+                </div>
             </div>
         )})}
     </div>
   );
 
-  // --- V13: Heatmap View (Improved Gradation) ---
+  // --- V13: Heatmap View ---
   const renderV13Heatmap = () => (
       <div style={{ height: '100%', overflowY: 'auto', padding: '12px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               {tableData.map((row, idx) => {
-                  // Improved Gradation: Normalize 40-120bpm range to 0-1hue shift or opacity
-                  // We'll use HSL for smoother gradient: Green (Normal) -> Yellow -> Red (High)
-                  // Normal ~60 (Green 120), High 120 (Red 0)
                   const bpm = row.mean;
-                  const normalized = Math.max(0, Math.min(1, (bpm - 50) / 70)); // 0 at 50bpm, 1 at 120bpm
+                  const normalized = Math.max(0, Math.min(1, (bpm - 50) / 70));
                   const hue = (1 - normalized) * 120; // 120 (Green) -> 0 (Red)
                   const color = `hsl(${hue}, 80%, 60%)`;
 
@@ -522,34 +536,39 @@ const HRTable = () => {
   const renderContent = () => {
     switch (activeVariant) {
         case 1: return renderV1Table(); // Standard
-        case 2: return renderV2Table(); // Compact Overview (Updated)
-        case 3: return renderV3Table(); // Progressive (Updated)
+        case 2: return renderV2Table(); // Compact Overview (Aligned)
+        case 3: return renderV3Table(); // Progressive
         case 4: return renderV4Table(); // Expert
-        case 5: return renderV5Table(); // Triage (Updated)
-        case 6: return renderV6VerticalTable(); // Stack (Updated)
-        case 7: return renderV1Table(); // Focus Review (Same as V1 but with tooltip logic applied in V1 renderer)
+        case 5: return renderV5Table(); // Triage (Widths Fixed)
+        case 6: return renderV6VerticalTable(); // Stack (Date Row)
+        case 7: return renderV1Table(); // Focus Review
         
         // New Variants
-        case 9: return renderV2Table(); // Sidebar Nav (Compact V2 with divider/columns)
+        case 9: return renderV2Table(); // Sidebar Nav
         case 10: return renderV1Table(); // Right Panel
         case 11: return renderV11AccordionTable(); // Accordion
-        case 12: return renderV12Grid(); // Grid (Updated)
-        case 13: return renderV13Heatmap(); // Heatmap (Updated)
-        case 14: return renderV2Table(); // Master Detail (Table first)
+        case 12: return renderV12Grid(); // Grid (Spacing & Content)
+        case 13: return renderV13Heatmap(); // Heatmap
+        case 14: return renderV2Table(); // Master Detail
 
         default: return renderDefaultTable();
     }
   }
 
   return (
-    <div style={{ 
-        backgroundColor: 'white', 
-        borderRadius: '8px', 
-        boxShadow: '0 1px 3px rgba(0,0,0,0.1)', 
-        overflow: 'hidden', 
-        height: activeVariant === 6 ? 'auto' : '100%', 
-        display: 'flex', 
-        flexDirection: 'column' 
+    <div 
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{ 
+            backgroundColor: 'white', 
+            borderRadius: '8px', 
+            boxShadow: isHovered ? '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' : '0 1px 3px rgba(0,0,0,0.1)', 
+            transition: 'box-shadow 0.2s',
+            overflow: 'hidden', 
+            height: activeVariant === 6 ? 'auto' : '100%', 
+            display: 'flex', 
+            flexDirection: 'column',
+            border: isHovered ? '1px solid #d1d5db' : '1px solid transparent'
     }}>
       <div style={{ padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f3f4f6', flexShrink: 0 }}>
         <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#374151', margin: 0 }}>

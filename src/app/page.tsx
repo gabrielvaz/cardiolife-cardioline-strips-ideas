@@ -42,16 +42,12 @@ export default function Home() {
          <DashboardControls />
       </div>
 
-      {isV2 && <MiniTimeline />}
-      
-      <div style={{ 
-        display: 'grid', 
         gridTemplateColumns: (() => {
            if (activeVariant === 4) return '1fr 3fr'; // Expert: ECG Dominant
-           if (activeVariant === 5) return '400px 1fr'; // Triage
+           if (activeVariant === 5) return '480px 1fr'; // Triage (Wider Table)
            if (activeVariant === 6) return '1fr'; // Stack (Vertical)
            if (activeVariant === 7) return '400px 1fr'; // Default Split (HRTable only)
-           if (activeVariant === 9) return '270px 1fr'; // Sidebar Nav (Width increased 20%)
+           if (activeVariant === 9) return '320px 1fr'; // Sidebar Nav (Wider)
            if (activeVariant === 10) return '1fr 340px'; // Right Panel (Narrow Right)
            if (activeVariant === 12) return '1fr'; 
            if (activeVariant === 13) return '1fr'; // Heatmap (Vertical Stack)
@@ -62,10 +58,10 @@ export default function Home() {
             // V12, V13, V14 need specific row split
             if (activeVariant === 12) return '1fr 300px'; // Grid Top, Strip Bottom
             if (activeVariant === 13) return '1fr 300px'; // Heatmap Top, Strip Bottom
-            if (activeVariant === 14) return '1fr 300px'; // Table Top (Master), Strip Bottom (Detail) - INVERTED requested
+            if (activeVariant === 14) return '1fr 300px'; // Table Top (Master), Strip Bottom (Detail)
             return '1fr'; // Default
         })(),
-        gap: '24px', 
+        gap: activeVariant === 6 ? '8px' : '24px', // Reduced gap for V6
         marginTop: isV2 ? '0' : '24px',
         alignItems: activeVariant === 6 ? 'start' : 'stretch', 
         flex: 1 
@@ -78,7 +74,7 @@ export default function Home() {
 
         {/* V6: Stack Mode */}
         {activeVariant === 6 && (
-            <div style={{ width: '100%', marginBottom: '24px' }}>
+            <div style={{ width: '100%', marginBottom: '0px' }}> {/* Reduced margin */}
                 <HRTable /> 
                 {/* Note: HRTable V6 renders its own height via flex column, but parent needs to allow it. */}
             </div>
