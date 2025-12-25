@@ -41,13 +41,15 @@ export default function Home() {
       <div style={{ marginBottom: isV2 ? '48px' : '0' }}> {/* V2 Margin increased to 48px */}
          <DashboardControls />
       </div>
-
+      
+      <div style={{ 
+        display: 'grid', 
         gridTemplateColumns: (() => {
            if (activeVariant === 4) return '1fr 3fr'; // Expert: ECG Dominant
-           if (activeVariant === 5) return '480px 1fr'; // Triage (Wider Table)
+           if (activeVariant === 5) return '560px 1fr'; // Triage (Wider Table to prevent header wrap)
            if (activeVariant === 6) return '1fr'; // Stack (Vertical)
            if (activeVariant === 7) return '400px 1fr'; // Default Split (HRTable only)
-           if (activeVariant === 9) return '320px 1fr'; // Sidebar Nav (Wider)
+           if (activeVariant === 9) return '352px 1fr'; // Sidebar Nav (Wider +32px)
            if (activeVariant === 10) return '1fr 340px'; // Right Panel (Narrow Right)
            if (activeVariant === 12) return '1fr'; 
            if (activeVariant === 13) return '1fr'; // Heatmap (Vertical Stack)

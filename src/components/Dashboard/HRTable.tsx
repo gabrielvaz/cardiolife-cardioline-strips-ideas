@@ -114,7 +114,7 @@ const HRTable = () => {
     </div>
   );
 
-  // --- V2: Overvie Timeline (Aligned with Header) ---
+  // --- V2: Overview Timeline (Aligned with Header) ---
   const renderV2Table = () => {
     let lastDate = '';
     return (
@@ -123,13 +123,13 @@ const HRTable = () => {
           <thead style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: '#f9fafb' }}>
             <tr style={{ textAlign: 'left' }}>
               {/* Padding-left adjusted to 16px to match Header title padding (12px 16px) */}
-              <th style={{ padding: '6px 8px 6px 16px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Time</th>
-              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Beats</th>
-              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Mean</th>
-              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Min</th>
-              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Max</th>
-              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Per Hour</th>
-              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase' }}>Max Pause</th>
+              <th style={{ padding: '6px 8px 6px 16px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Time</th>
+              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Total Beats</th>
+              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>HR Mean</th>
+              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>HR Min</th>
+              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>HR Max</th>
+              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Per Hour</th>
+              <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Max Pause</th>
             </tr>
           </thead>
           <tbody>
