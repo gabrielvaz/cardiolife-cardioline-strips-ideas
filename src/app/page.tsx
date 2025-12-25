@@ -10,100 +10,93 @@ import MiniTimeline from '@/components/Dashboard/MiniTimeline';
 import ClinicalFindings from '@/components/Dashboard/ClinicalFindings';
 import ZenDashboard from '@/components/Dashboard/ZenDashboard';
 
+import ResizableSplitPane from '@/components/Layout/ResizableSplitPane';
+
 export default function Home() {
   const { activeVariant } = useVariant();
 
   // Layout Logic
   const isV2 = activeVariant === 2;
-  const isV4 = activeVariant === 4;
   const isV5 = activeVariant === 5;
   const isV6 = activeVariant === 6; // Stack Mode (Vertical)
-  const isV7 = activeVariant === 7; // Narrative
-  const isV8 = activeVariant === 8; // Zen Mode
-
-  if (isV8) {
-    return (
-        <div style={{ padding: '0 24px 24px 24px', backgroundColor: '#f3f4f6', minHeight: 'calc(100vh - 64px)' }}>
-            <ZenDashboard />
-            <div style={{
-                position: 'fixed', bottom: '16px', right: '16px', color: '#111', fontSize: '12px', pointerEvents: 'none', zIndex: 100
-            }}>Active: Variant 8 - Realistic Clinical</div>
-        </div>
-    )
-  }
-
+  
   return (
     <div style={{ padding: '0 24px 24px 24px', backgroundColor: '#f8f9fa', minHeight: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column' }}>
       <DashboardHeader />
       
-      {/* V5 Toggle Removed as requested */}
-
-      <div style={{ marginBottom: isV2 ? '48px' : '0' }}> {/* V2 Margin increased to 48px */}
+      <div style={{ marginBottom: isV2 ? '48px' : '0' }}> 
          <DashboardControls />
       </div>
       
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: (() => {
-           if (activeVariant === 4) return '1fr 3fr'; // Expert: ECG Dominant
-           if (activeVariant === 5) return '560px 1fr'; // Triage (Wider Table to prevent header wrap)
-           if (activeVariant === 6) return '1fr'; // Stack (Vertical)
-           if (activeVariant === 7) return '400px 1fr'; // Default Split (HRTable only)
-           if (activeVariant === 9) return '352px 1fr'; // Sidebar Nav (Wider +32px)
-           if (activeVariant === 10) return '1fr 340px'; // Right Panel (Narrow Right)
-           if (activeVariant === 12) return '1fr'; 
-           if (activeVariant === 13) return '1fr'; // Heatmap (Vertical Stack)
-           if (activeVariant === 14) return '1fr'; // Master Detail (Vertical Stack)
-           return '400px 1fr'; // Default (V1, V2, V3, V11)
-        })(), 
-        gridTemplateRows: (() => {
-            // V12, V13, V14 need specific row split
-            if (activeVariant === 12) return '1fr 300px'; // Grid Top, Strip Bottom
-            if (activeVariant === 13) return '1fr 300px'; // Heatmap Top, Strip Bottom
-            if (activeVariant === 14) return '1fr 300px'; // Table Top (Master), Strip Bottom (Detail)
-            return '1fr'; // Default
-        })(),
-        gap: activeVariant === 6 ? '8px' : '24px', // Reduced gap for V6
-        marginTop: isV2 ? '0' : '24px',
-        alignItems: activeVariant === 6 ? 'start' : 'stretch', 
-        flex: 1 
-      }}>
-        {/* Render Logic Based on Variant */}
-        
-        {/* Standard Left/Top Placement */}
-        {/* V14 now included here because Table is first (Top) */}
-        {![6, 10, 12, 13].includes(activeVariant) && <HRTable />}
+      {/* V8 Resizable Wrapper */}
+      {activeVariant === 8 ? (
+          <div style={{ flex: 1, marginTop: '24px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+              <ResizableSplitPane 
+                left={<HRTable />}
+                right={<ECGViewer />}
+                initialLeftWidth={40}
+              />
+               <div style={{ position: 'fixed', bottom: '16px', right: '16px', color: '#111', fontSize: '12px', pointerEvents: 'none', zIndex: 100 }}>Active: V8 - Realistic Resizable</div>
+          </div>
+      ) : (
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: (() => {
+               if (activeVariant === 4) return '1fr 3fr'; 
+               if (activeVariant === 2) return '600px 1fr'; // V2 Wider to fix overlap
+               if (activeVariant === 5) return '560px 1fr'; 
+               if (activeVariant === 6) return '1fr'; 
+               if (activeVariant === 7) return '400px 1fr'; 
+               if (activeVariant === 9) return '352px 1fr'; 
+               if (activeVariant === 10) return '1fr 340px'; 
+               if (activeVariant === 12) return '1fr'; 
+               if (activeVariant === 13) return '1fr 340px'; // V13: Strips Main, Table Right Sidebar
+               if (activeVariant === 14) return '1fr'; 
+               return '400px 1fr'; // Default
+            })(), 
+            gridTemplateRows: (() => {
+                if (activeVariant === 12) return '1fr 300px'; 
+                if (activeVariant === 14) return '1fr 300px'; 
+                return '1fr'; 
+            })(),
+            gap: activeVariant === 6 ? '8px' : activeVariant === 13 ? '0' : '24px', // No gap for V13 if sidebar style
+            marginTop: isV2 ? '0' : '24px',
+            alignItems: activeVariant === 6 ? 'start' : 'stretch', 
+            flex: 1 
+          }}>
+            {/* Render Logic Based on Variant */}
+            
+            {/* Left/Top Content */}
+            {![6, 8, 10, 12, 13].includes(activeVariant) && <HRTable />}
 
-        {/* V6: Stack Mode */}
-        {activeVariant === 6 && (
-            <div style={{ width: '100%', marginBottom: '0px' }}> {/* Reduced margin */}
-                <HRTable /> 
-                {/* Note: HRTable V6 renders its own height via flex column, but parent needs to allow it. */}
-            </div>
-        )}
+            {/* V6: Stack Mode */}
+            {activeVariant === 6 && (
+                <div style={{ width: '100%', marginBottom: '0px' }}>
+                    <HRTable /> 
+                </div>
+            )}
 
-        {/* V12: Grid Top */}
-        {activeVariant === 12 && (
-             <div style={{ overflow: 'hidden' }}><HRTable /></div>
-        )}
+            {/* V12: Grid Top */}
+            {activeVariant === 12 && (
+                 <div style={{ overflow: 'hidden' }}><HRTable /></div>
+            )}
 
-        {/* V13: Heatmap Top */}
-        {activeVariant === 13 && (
-             <div style={{ overflow: 'hidden' }}><HRTable /></div>
-        )}
+            {/* V13: Heatmap -> now Fullscreen Strips (Main) */}
+            {activeVariant === 13 && <ECGViewer />}
+    
+            {/* Middle/Bottom Content (ECG normally) */}
+            {![13, 14].includes(activeVariant) && <ECGViewer />}
+            
+            {/* V10 & V13: Right Panel */}
+            {activeVariant === 10 && <HRTable />}
+            {activeVariant === 13 && (
+                <div style={{ borderLeft: '1px solid #e5e7eb', backgroundColor: 'white' }}>
+                    <HRTable />
+                </div>
+            )}
 
-        {/* V14: Master Detail (Table First) - Handled by standard placement above? Yes. */}
-        {/* So we remove special V14 ECG Viewer top render */}
-
-        {/* Middle/Bottom Content (ECG normally) */}
-        {/* If V14, ECG is bottom (Second). */}
-        <ECGViewer />
-        
-        {/* V10: Right Panel */}
-        {activeVariant === 10 && <HRTable />}
-
-      </div>
-
+          </div>
+      )}
 
       <div style={{
         position: 'fixed',
@@ -115,9 +108,10 @@ export default function Home() {
         borderRadius: '20px',
         fontSize: '12px',
         pointerEvents: 'none',
-        zIndex: 100
+        zIndex: 100,
+        display: activeVariant === 8 ? 'none' : 'block' // Hide default label for V8
       }}>
-        Active: V{activeVariant} {isV5 ? '- Triage' : ''} {isV6 ? '- Stack' : ''}
+        active: V{activeVariant}
       </div>
     </div>
   );
