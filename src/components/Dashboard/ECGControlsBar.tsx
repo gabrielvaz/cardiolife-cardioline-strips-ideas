@@ -26,6 +26,60 @@ const ECGControlsBar = ({ time = '21:09:50', hr = 78 }: ECGControlsBarProps) => 
       </div>
 
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        {/* Playback Controls */}
+        <div style={{ display: 'flex', gap: '4px', marginRight: '24px' }}>
+          {[
+            // Fast Backward
+            <svg key="rewind" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg>,
+            // Step Backward
+            <svg key="back" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>,
+            // Play
+            <svg key="play" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>,
+            // Step Forward
+            <svg key="next" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>,
+            // Fast Forward
+            <svg key="forward" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m13 17 5-5-5-5"/><path d="m6 17 5-5-5-5"/></svg>,
+          ].map((icon, idx) => (
+            <button key={idx} style={{ 
+              width: '40px', 
+              height: '40px', 
+              backgroundColor: '#eff6ff', 
+              color: '#1f2937',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s'
+            }}
+            onMouseOver={e => e.currentTarget.style.backgroundColor = '#dbeafe'}
+            onMouseOut={e => e.currentTarget.style.backgroundColor = '#eff6ff'}
+            >{icon}</button>
+          ))}
+        </div>
+
+        {/* Delete/Close Button */}
+        <button style={{ 
+            width: '40px', 
+            height: '40px', 
+            backgroundColor: '#eff6ff', 
+            color: '#1f2937',
+            borderRadius: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: 'none',
+            cursor: 'pointer',
+            marginRight: '24px',
+            transition: 'background-color 0.2s'
+          }}
+          onMouseOver={e => e.currentTarget.style.backgroundColor = '#fee2e2'}
+          onMouseOut={e => e.currentTarget.style.backgroundColor = '#eff6ff'}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+
         {/* F1/F2 Buttons */}
         <div style={{ display: 'flex', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e5e7eb', height: '36px' }}>
           <button style={{ 
@@ -85,7 +139,7 @@ const ECGControlsBar = ({ time = '21:09:50', hr = 78 }: ECGControlsBarProps) => 
         {/* Action Buttons */}
         <button style={{ 
           height: '36px',
-          padding: '0 16px', 
+          padding: '0 12px', 
           backgroundColor: '#f3f4f6', 
           borderRadius: '4px', 
           fontSize: '12px', 
@@ -97,7 +151,7 @@ const ECGControlsBar = ({ time = '21:09:50', hr = 78 }: ECGControlsBarProps) => 
         
         <button style={{ 
           height: '36px',
-          padding: '0 16px', 
+          padding: '0 12px', 
           backgroundColor: '#f3f4f6', 
           borderRadius: '4px', 
           fontSize: '12px', 

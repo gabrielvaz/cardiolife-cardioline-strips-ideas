@@ -128,13 +128,13 @@ const HRTable = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', tableLayout: 'fixed' }}>
             <thead style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: '#f9fafb' }}>
               <tr style={{ textAlign: 'left' }}>
-                <th style={{ padding: '6px 8px 6px 16px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Time</th>
-                <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Total Beats</th>
-                <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>HR Mean</th>
-                <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>HR Min</th>
-                <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>HR Max</th>
-                <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Per Hour</th>
-                <th style={{ padding: '6px 8px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>Max Pause</th>
+                <th style={{ padding: '6px 4px 6px 16px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', verticalAlign: 'bottom', fontSize: '10px', width: '13%' }}>Time</th>
+                <th style={{ padding: '6px 4px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', verticalAlign: 'bottom', fontSize: '10px', width: '16%' }}>Total Beats</th>
+                <th style={{ padding: '6px 4px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', verticalAlign: 'bottom', fontSize: '10px', width: '14%' }}>HR Mean</th>
+                <th style={{ padding: '6px 4px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', verticalAlign: 'bottom', fontSize: '10px', width: '13%' }}>HR Min</th>
+                <th style={{ padding: '6px 4px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', verticalAlign: 'bottom', fontSize: '10px', width: '13%' }}>HR Max</th>
+                <th style={{ padding: '6px 4px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', verticalAlign: 'bottom', fontSize: '10px', width: '15.5%' }}>Per Hour</th>
+                <th style={{ padding: '6px 4px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', verticalAlign: 'bottom', fontSize: '10px', width: '15.5%' }}>Max Pause</th>
               </tr>
             </thead>
             <tbody>
@@ -572,7 +572,7 @@ const HRTable = () => {
               boxShadow: isHovered ? '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' : '0 1px 3px rgba(0,0,0,0.1)', 
               transition: 'box-shadow 0.2s',
               overflow: 'hidden', 
-              height: activeVariant === 6 ? 'auto' : '100%', 
+              height: [6, 12].includes(activeVariant) ? 'auto' : '100%', 
               display: 'flex', 
               flexDirection: 'column',
               border: isHovered ? '1px solid #d1d5db' : '1px solid transparent'

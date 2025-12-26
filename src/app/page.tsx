@@ -55,7 +55,7 @@ export default function Home() {
                return '400px 1fr'; // Default
             })(), 
             gridTemplateRows: (() => {
-                if (activeVariant === 12) return '1fr 300px'; 
+                if (activeVariant === 12) return 'auto 1fr'; 
                 if (activeVariant === 14) return '1fr 300px'; 
                 return '1fr'; 
             })(),
