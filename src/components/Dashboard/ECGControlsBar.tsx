@@ -27,7 +27,7 @@ const ECGControlsBar = ({ time = '21:09:50', hr = 78 }: ECGControlsBarProps) => 
 
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
         {/* Playback Controls */}
-        <div style={{ display: 'flex', gap: '4px', marginRight: '24px' }}>
+        <div style={{ display: 'flex', gap: '4px' }}>
           {[
             // Fast Backward
             <svg key="rewind" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m11 17-5-5 5-5"/><path d="m18 17-5-5 5-5"/></svg>,
@@ -51,7 +51,7 @@ const ECGControlsBar = ({ time = '21:09:50', hr = 78 }: ECGControlsBarProps) => 
               justifyContent: 'center',
               border: 'none',
               cursor: 'pointer',
-              transition: 'background-color 0.2s'
+              transition: 'all 0.2s'
             }}
             onMouseOver={e => e.currentTarget.style.backgroundColor = '#dbeafe'}
             onMouseOut={e => e.currentTarget.style.backgroundColor = '#eff6ff'}
@@ -59,7 +59,7 @@ const ECGControlsBar = ({ time = '21:09:50', hr = 78 }: ECGControlsBarProps) => 
           ))}
         </div>
 
-        {/* Delete/Close Button */}
+        {/* Close Button */}
         <button style={{ 
             width: '40px', 
             height: '40px', 
@@ -71,8 +71,8 @@ const ECGControlsBar = ({ time = '21:09:50', hr = 78 }: ECGControlsBarProps) => 
             justifyContent: 'center',
             border: 'none',
             cursor: 'pointer',
-            marginRight: '24px',
-            transition: 'background-color 0.2s'
+            marginRight: '12px',
+            transition: 'all 0.2s'
           }}
           onMouseOver={e => e.currentTarget.style.backgroundColor = '#fee2e2'}
           onMouseOut={e => e.currentTarget.style.backgroundColor = '#eff6ff'}
@@ -81,85 +81,82 @@ const ECGControlsBar = ({ time = '21:09:50', hr = 78 }: ECGControlsBarProps) => 
         </button>
 
         {/* F1/F2 Buttons */}
-        <div style={{ display: 'flex', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e5e7eb', height: '36px' }}>
-          <button style={{ 
-            backgroundColor: '#fed7aa', 
-            color: '#92400e', 
-            padding: '0 16px', 
-            fontSize: '12px', 
-            fontWeight: 700,
-            border: 'none',
-            height: '36px',
-            cursor: 'pointer'
-          }}>F1</button>
-          <button style={{ 
-            backgroundColor: '#f3f4f6', 
-            color: '#6b7280', 
-            padding: '0 16px', 
-            fontSize: '12px', 
-            fontWeight: 700,
-            borderLeft: '1px solid #e5e7eb',
-            borderRight: 'none',
-            borderTop: 'none',
-            borderBottom: 'none',
-            height: '36px',
-            cursor: 'pointer'
-          }}>F2</button>
+        <div style={{ display: 'flex', gap: '4px' }}>
+          {[
+            { label: 'F1', active: true },
+            { label: 'F2', active: false }
+          ].map((btn, idx) => (
+            <button key={idx} style={{ 
+              backgroundColor: btn.active ? '#dbeafe' : '#eff6ff', 
+              color: btn.active ? '#1e40af' : '#1f2937', 
+              padding: '0 16px', 
+              fontSize: '12px', 
+              fontWeight: 700,
+              borderRadius: '8px',
+              border: 'none',
+              height: '40px',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseOver={e => e.currentTarget.style.backgroundColor = '#dbeafe'}
+            onMouseOut={e => e.currentTarget.style.backgroundColor = btn.active ? '#dbeafe' : '#eff6ff'}
+            >{btn.label}</button>
+          ))}
         </div>
 
-        {/* Ruler/Caliper Buttons */}
-        <div style={{ display: 'flex', gap: '2px', backgroundColor: '#f3f4f6', padding: '2px', borderRadius: '4px', border: '1px solid #e5e7eb', height: '36px', alignItems: 'center' }}>
+        {/* Editing Tools */}
+        <div style={{ display: 'flex', gap: '4px', marginLeft: '8px' }}>
           {[
             // Mouse Pointer Icon
-            <svg key="pointer" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></svg>,
+            { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></svg>, active: true },
             // Ruler Icon
-            <svg key="ruler" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m7.5 10.5 2 2"/><path d="m10.5 7.5 2 2"/><path d="m13.5 4.5 2 2"/><path d="m4.5 7.5 2 2"/></svg>,
+            { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m7.5 10.5 2 2"/><path d="m10.5 7.5 2 2"/><path d="m13.5 4.5 2 2"/><path d="m4.5 7.5 2 2"/></svg>, active: false },
             // Vertical Ruler
-            <svg key="vruler" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="8" height="18" x="8" y="3" rx="1"/><path d="M8 8h4"/><path d="M8 12h4"/><path d="M8 16h4"/></svg>,
+            { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="8" height="18" x="8" y="3" rx="1"/><path d="M8 8h4"/><path d="M8 12h4"/><path d="M8 16h4"/></svg>, active: false },
             // Caliper/Measurement
-            <svg key="caliper" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20v-5h4l-2-2h4"/><path d="M4 20v-5h4l-2-2h4"/><path d="M4 5V3h16v2"/><path d="M4 8V6h16v2"/><path d="M4 11V9h16v2"/></svg>,
+            { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20v-5h4l-2-2h4"/><path d="M4 20v-5h4l-2-2h4"/><path d="M4 5V3h16v2"/><path d="M4 8V6h16v2"/><path d="M4 11V9h16v2"/></svg>, active: false },
             // Annotation
-            <svg key="annotation" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-          ].map((icon, idx) => (
+            { icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>, active: false }
+          ].map((tool, idx) => (
             <button key={idx} style={{ 
-              width: '32px', 
-              height: '32px', 
-              backgroundColor: idx === 0 ? '#fed7aa' : 'transparent', 
-              color: idx === 0 ? '#92400e' : '#6b7280',
-              borderRadius: '2px',
+              width: '40px', 
+              height: '40px', 
+              backgroundColor: tool.active ? '#dbeafe' : '#eff6ff', 
+              color: tool.active ? '#1e40af' : '#1f2937',
+              borderRadius: '8px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               border: 'none',
-              cursor: 'pointer'
-            }}>{icon}</button>
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseOver={e => e.currentTarget.style.backgroundColor = '#dbeafe'}
+            onMouseOut={e => e.currentTarget.style.backgroundColor = tool.active ? '#dbeafe' : '#eff6ff'}
+            >{tool.icon}</button>
           ))}
         </div>
 
         {/* Action Buttons */}
-        <button style={{ 
-          height: '36px',
-          padding: '0 12px', 
-          backgroundColor: '#f3f4f6', 
-          borderRadius: '4px', 
-          fontSize: '12px', 
-          fontWeight: 600,
-          color: '#374151',
-          border: '1px solid #e5e7eb',
-          cursor: 'pointer'
-        }}>Segmentation</button>
-        
-        <button style={{ 
-          height: '36px',
-          padding: '0 12px', 
-          backgroundColor: '#f3f4f6', 
-          borderRadius: '4px', 
-          fontSize: '12px', 
-          fontWeight: 600,
-          color: '#374151',
-          border: '1px solid #e5e7eb',
-          cursor: 'pointer'
-        }}>Add report</button>
+        <div style={{ display: 'flex', gap: '4px', marginLeft: '8px' }}>
+          {['Segmentation', 'Add report'].map((label, idx) => (
+            <button key={idx} style={{ 
+              height: '40px',
+              padding: '0 16px', 
+              backgroundColor: '#eff6ff', 
+              borderRadius: '8px', 
+              fontSize: '12px', 
+              fontWeight: 600,
+              color: '#1f2937',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseOver={e => e.currentTarget.style.backgroundColor = '#dbeafe'}
+            onMouseOut={e => e.currentTarget.style.backgroundColor = '#eff6ff'}
+            >{label}</button>
+          ))}
+        </div>
       </div>
     </div>
   );
